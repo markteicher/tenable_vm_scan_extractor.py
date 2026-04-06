@@ -1,4 +1,7 @@
 ![Tenable](docs/images/tenable_vulnerability_management_aging_scans_telemetry.jpg)
+![Tenable](docs/images/scan_age_mode.jpg)
+
+
 
 
 

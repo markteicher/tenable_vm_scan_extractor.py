@@ -1,0 +1,430 @@
+<!--
+=============================================================================
+ default/data/ui/views/tenable_vm_aging_scans_hub.xml
+ Tenable for Splunk App
+ Tenable Vulnerability Management Aging Scans Hub (tile layout)
+=============================================================================
+
+PURPOSE
+
+
+This view provides:
+
+- A tile-based landing page for the Aging Scans capability
+- A documented overview of the Aging Scans view
+- Scan_age bucket definitions
+- KPI coverage summary
+- Ownership, target, and trend coverage summary
+
+
+DATA SOURCE
+
+
+=============================================================================
+--><dashboard version="1.1" theme="light">
+  <label>📚 Tenable Vulnerability Management Aging Scans Telemetry Navigation Hub</label>
+  <row>
+    <panel>
+      <html>
+        <style>
+          .portal-grid{
+            display:grid;
+            grid-template-columns:repeat(3,1fr);
+            gap:22px;
+            margin-top:20px;
+            margin-bottom:26px;
+          }
+          .portal-tile{
+            background:#ffffff;
+            border:1px solid #e5e5e5;
+            border-radius:8px;
+            padding:22px;
+            text-align:center;
+            transition:all .18s ease;
+          }
+          .portal-tile:hover{
+            box-shadow:0 4px 14px rgba(0,0,0,.18);
+            transform:translateY(-2px);
+          }
+          .portal-icon{
+            font-size:34px;
+            margin-bottom:10px;
+          }
+          .portal-title{
+            font-size:15px;
+            font-weight:600;
+            margin-bottom:6px;
+          }
+          .portal-subtitle{
+            font-size:12px;
+            color:#6b778c;
+            line-height:1.45;
+          }
+          .portal-link{
+            text-decoration:none;
+            color:inherit;
+            display:block;
+          }
+          .doc-card{
+            background:#ffffff;
+            border:1px solid #e5e5e5;
+            border-radius:8px;
+            padding:18px 20px;
+            margin:0 0 18px 0;
+          }
+          .doc-title{
+            font-size:18px;
+            font-weight:600;
+            color:#2c3e50;
+            margin-bottom:8px;
+          }
+          .doc-text{
+            font-size:13px;
+            color:#3b4652;
+            line-height:1.6;
+          }
+          .doc-list{
+            margin:10px 0 0 18px;
+            padding:0;
+          }
+          .doc-list li{
+            margin:4px 0;
+          }
+          .doc-table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:10px;
+            font-size:12px;
+          }
+          .doc-table th,
+          .doc-table td{
+            border:1px solid #e5e5e5;
+            padding:8px 10px;
+            text-align:left;
+            vertical-align:top;
+          }
+          .doc-table th{
+            background:#f7f9fc;
+            font-weight:600;
+          }
+          .anchor-offset{
+            scroll-margin-top:24px;
+          }
+        </style>
+
+        <div class="portal-grid">
+
+          <a class="portal-link" href="#overview">
+            <div class="portal-tile">
+              <div class="portal-icon">🧭</div>
+              <div class="portal-title">Overview</div>
+              <div class="portal-subtitle">Purpose, scope, and operating intent for the Aging Scans view.</div>
+            </div>
+          </a>
+
+          <a class="portal-link" href="#data-source">
+            <div class="portal-tile">
+              <div class="portal-icon">📦</div>
+              <div class="portal-title">Data Source</div>
+              <div class="portal-subtitle">Tenable APIs leveraged for this Dashboard.</div>
+            </div>
+          </a>
+
+          <a class="portal-link" href="#scan-age-model">
+            <div class="portal-tile">
+              <div class="portal-icon">⏳</div>
+              <div class="portal-title">Scan_age Model</div>
+              <div class="portal-subtitle">Age bucket logic and operational meaning of each Scan_age range.</div>
+            </div>
+          </a>
+
+          <a class="portal-link" href="#core-kpis">
+            <div class="portal-tile">
+              <div class="portal-icon">📊</div>
+              <div class="portal-title">Core KPIs</div>
+              <div class="portal-subtitle">Core scan counts, enablement counts, age metrics, and description metrics.</div>
+            </div>
+          </a>
+
+          <a class="portal-link" href="#owner-visibility">
+            <div class="portal-tile">
+              <div class="portal-icon">👤</div>
+              <div class="portal-title">Owner Visibility</div>
+              <div class="portal-subtitle">Top owners, Unknown user coverage, and ownership completeness checks.</div>
+            </div>
+          </a>
+
+          <a class="portal-link" href="#target-metrics">
+            <div class="portal-tile">
+              <div class="portal-icon">🎯</div>
+              <div class="portal-title">Target Metrics</div>
+              <div class="portal-subtitle">Target totals, averages, and per-scan target distribution.</div>
+            </div>
+          </a>
+
+          <a class="portal-link" href="#trend-comparisons">
+            <div class="portal-tile">
+              <div class="portal-icon">📈</div>
+              <div class="portal-title">Trend Comparisons</div>
+              <div class="portal-subtitle">Day over Day, Week over Week, Month over Month, Quarter over Quarter, and Year over Year.</div>
+            </div>
+          </a>
+
+          <a class="portal-link" href="#scan-views">
+            <div class="portal-tile">
+              <div class="portal-icon">🗂️</div>
+              <div class="portal-title">Scan Views</div>
+              <div class="portal-subtitle">Oldest scans, newest scans, and the detailed Aging Scans listing.</div>
+            </div>
+          </a>
+
+          <a class="portal-link" href="#field-reference">
+            <div class="portal-tile">
+              <div class="portal-icon">🧾</div>
+              <div class="portal-title">Field Reference</div>
+              <div class="portal-subtitle">Primary dataset fields used in the Aging Scans dashboard.</div>
+            </div>
+          </a>
+
+        </div>
+
+        <div id="overview" class="doc-card anchor-offset">
+          <div class="doc-title">🧭 Overview</div>
+          <div class="doc-text">
+            The Tenable Vulnerability Management Aging Scans view is an operational hygiene dashboard for scan inventory review.
+            It highlights stale scans, ownership gaps, target distribution, recent changes, and scan records that may need review.
+            The primary working label in the dashboard is <b>Scan_age</b>, which classifies each scan into one aging bucket.
+          </div>
+        </div>
+
+        <div id="data-source" class="doc-card anchor-offset">
+          <div class="doc-title">📦 Data Source</div>
+          <div class="doc-text">
+            The dashboard is powered by the merged scan dataset:
+            
+            The dataset combines inventory and scan detail metadata into a single record set for Splunk view rendering.
+          </div>
+        </div>
+
+        <div id="scan-age-model" class="doc-card anchor-offset">
+          <div class="doc-title">⏳ Scan_age Model</div>
+          <div class="doc-text">
+            Scan_age is calculated from the older of the scan creation timestamp and the last modification timestamp.
+            This makes older, long-standing scans surface first for operational review.
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>Bucket</th>
+                  <th>Meaning</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>🆕 Within last 24 hours</td>
+                  <td>Scans created within the last 24 hours.</td>
+                </tr>
+                <tr>
+                  <td>⏱️ Less than 7 days but greater than 1 day</td>
+                  <td>Scans created within last week.</td>
+                </tr>
+                <tr>
+                  <td>🕒 Less than 15 days but greater than 7 days</td>
+                  <td>Scans created beyond the first week.</td>
+                </tr>
+                <tr>
+                  <td>🌱 Less than 30 days but greater than 15 days</td>
+                  <td>Scans created between 15 and 30 days.</td>
+                </tr>
+                <tr>
+                  <td>🍃 Less than 60 days but greater than 30 days</td>
+                  <td>Scans created between 30 and 60 days.</td>
+                </tr>
+                <tr>
+                  <td>🌿 Less than 90 days but greater than 60 days</td>
+                  <td>Scan created within the last quarter.</td>
+                </tr>
+                <tr>
+                  <td>🌊 Less than 180 days but greater than 90 days</td>
+                  <td>Scan created between 90 and 179 days.</td>
+                </tr>
+                <tr>
+                  <td>🧊 Less than 1 year old but greater than 180 days</td>
+                  <td>Scans created between 180 days and less than 1 year.</td>
+                </tr>
+                <tr>
+                  <td>🔵 Greater than 1 year old</td>
+                  <td>Scans older than 1 year old .</td>
+                </tr>
+                <tr>
+                  <td>🟡 Greater than 2 years old</td>
+                  <td>Scans older than 2 years old.</td>
+                </tr>
+                <tr>
+                  <td>🟠 Greater than 3 years old</td>
+                  <td>Scans older than 3 years old.</td>
+                </tr>
+                <tr>
+                  <td>⚠️ Greater than 4 years old</td>
+                  <td>Scans older than 4 years old.</td>
+                </tr>
+                <tr>
+                  <td>⛔ Greater than 5 years old</td>
+                  <td>Scans older than 5 years old.</td>
+                </tr>
+                <tr>
+                  <td>🔥 Greater than 6 years old</td>
+                  <td>Scans older than 6 years old.</td>
+                </tr>
+                <tr>
+                  <td>🚨 Greater than 7 years old</td>
+                  <td>Scans older than 7 years old.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="core-kpis" class="doc-card anchor-offset">
+          <div class="doc-title">📊 Core KPIs</div>
+          <div class="doc-text">
+            The Aging Scans dashboard tracks age of scans.
+            <ul class="doc-list">
+              <li>Total Number of Scans</li>
+              <li>Total Enabled Scans</li>
+              <li>Total Disabled Scans</li>
+              <li>Average Scan Age (Days)</li>
+              <li>Median Scan Age (Days)</li>
+              <li>Number of Scans Without Description</li>
+              <li>Number of Scans Created in Last 30 Days</li>
+              <li>Number of Scans Updated in Last 30 Days</li>
+              <li>Number of Scans Never Updated Since Creation</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="owner-visibility" class="doc-card anchor-offset">
+          <div class="doc-title">👤 Owner Visibility</div>
+          <div class="doc-text">
+            Ownership coverage is surfaced through:
+            <ul class="doc-list">
+              <li>Top 20 Scans by Owner</li>
+              <li>Scans with <b>Unknown user</b>
+              </li>
+              <li>Scans Missing Owner</li>
+              <li>Scans Missing Folder ID</li>
+            </ul>
+            The <b>Unknown user</b> value is used when scan has no ownership.
+          </div>
+        </div>
+
+        <div id="target-metrics" class="doc-card anchor-offset">
+          <div class="doc-title">🎯 Target Metrics</div>
+          <div class="doc-text">
+            Target coverage is measured using the Tenable <b>total_targets</b> field.
+            The dashboard includes:
+            <ul class="doc-list">
+              <li>Total Number of Targets Across All Scans</li>
+              <li>Average Targets per Scan</li>
+              <li>Largest Target Count on a Single Scan</li>
+              <li>Total Targets and Percentage per Scan</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="trend-comparisons" class="doc-card anchor-offset">
+          <div class="doc-title">📈 Trend Comparisons</div>
+          <div class="doc-text">
+            Period-over-period comparison panels are included for both scan creation activity and scan update activity.
+            Each comparison block includes:
+            <ul class="doc-list">
+              <li>Day over Day</li>
+              <li>Week over Week</li>
+              <li>Month over Month</li>
+              <li>Quarter over Quarter</li>
+              <li>Year over Year</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="inventory-views" class="doc-card anchor-offset">
+          <div class="doc-title">🗂️ Inventory Views</div>
+          <div class="doc-text">
+            The dashboard includes multiple inventory review panels:
+            <ul class="doc-list">
+              <li>Oldest Scans</li>
+              <li>Newest Scans</li>
+              <li>Aging Scans Summary Detailed Listing</li>
+            </ul>
+            These views provides a summary detailing listing of all scans.
+          </div>
+        </div>
+
+        <div id="field-reference" class="doc-card anchor-offset">
+          <div class="doc-title">🧾 Field Reference</div>
+          <div class="doc-text">
+            Core fields used by the Aging Scans dashboard:
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  <th>Purpose</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>id</td>
+                  <td>Scan identifier.</td>
+                </tr>
+                <tr>
+                  <td>name</td>
+                  <td>Scan name.</td>
+                </tr>
+                <tr>
+                  <td>owner</td>
+                  <td>Scan owner; normalized to <b>Unknown user</b> when scan has no owner.</td>
+                </tr>
+                <tr>
+                  <td>folder_id</td>
+                  <td>Folder identifier.</td>
+                </tr>
+                <tr>
+                  <td>status</td>
+                  <td>Scan status.</td>
+                </tr>
+                <tr>
+                  <td>type</td>
+                  <td>Scan type.</td>
+                </tr>
+                <tr>
+                  <td>enabled</td>
+                  <td>Enablement state for the scan.</td>
+                </tr>
+                <tr>
+                  <td>description</td>
+                  <td>Description field used for completeness checks.</td>
+                </tr>
+                <tr>
+                  <td>total_targets</td>
+                  <td>Total number of targets in the scan.</td>
+                </tr>
+                <tr>
+                  <td>creation_date</td>
+                  <td>Source creation timestamp.</td>
+                </tr>
+                <tr>
+                  <td>last_modification_date</td>
+                  <td>Source last modification timestamp.</td>
+                </tr>
+                <tr>
+                  <td>Scan_age</td>
+                  <td>Derived age bucket used for operational classification.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </html>
+    </panel>
+  </row>
+</dashboard>

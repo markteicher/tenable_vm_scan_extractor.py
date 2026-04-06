@@ -1,3 +1,6 @@
+![Tenable](tenable_vulnerability_management_aging_scans_telemetry.jpg)
+
+
 # tenable_vm_scan_extractor.py
 
 ## Overview

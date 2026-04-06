@@ -9,7 +9,7 @@
 # tenable_vm_scan_extractor.py
 
 ## Overview
-Full extraction utility for **Tenable Vulnerability Management aged scan analysis**. Extract and preserve **scans **, **scan inventory**, **scan detail metadata**, and **merged scan output** from the Tenable Vulnerability Management API for exporting all the scans to produce key performance indicators for age of scans.
+Full extraction utility for **Tenable Vulnerability Management aged scan analysis**. Extract and preserve **scans**, **scan inventory**, **scan detail metadata**, and **merged scan output** from the Tenable Vulnerability Management API for exporting all the scans to produce key performance indicators for age of scans.
 
 The application uses the Tenable Vulnerability Management REST API to retrieve all scans that have been created extract the per-scan detail metadata.
 All data is retrieved through **read-only API operations** and written into structured CSV outputs for aging scan metrics

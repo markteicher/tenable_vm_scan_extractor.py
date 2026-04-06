@@ -2,6 +2,7 @@
 ![Tenable](docs/images/scan_age_mode.jpg)
 
 
+![Tenable](docs/tenable_vm_scan_extractor_logo.jpg)
 
 
 

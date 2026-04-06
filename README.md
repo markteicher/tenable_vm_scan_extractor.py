@@ -54,6 +54,14 @@ Pass 1 establishes the authoritative scan-name count.
 Pass 2 should match that count.  
 Pass 3 should match that count.
 
+![License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)
+
+## ⚠️ Disclaimer
+
+This tool is **not an official BitSight product**.
+
+Use of this software is **not covered** by any license, warranty, or support agreement you may have with BitSight.
+
 ## ⚠️ Disclaimer
 
 This tool is **not an official Tenable product**.

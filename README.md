@@ -9,14 +9,14 @@
 # tenable_vm_scan_extractor.py
 
 ## Overview
-Full extraction utility for **Tenable Vulnerability Management aged scan analysis**. Extract and preserve **scan names**, **scan inventory**, **scan detail metadata**, and **merged scan output** from the Tenable Vulnerability Management API for exporting all the scans to produce key performance indicators for age of scans.
+Full extraction utility for **Tenable Vulnerability Management aged scan analysis**. Extract and preserve **scans **, **scan inventory**, **scan detail metadata**, and **merged scan output** from the Tenable Vulnerability Management API for exporting all the scans to produce key performance indicators for age of scans.
 
 The application uses the Tenable Vulnerability Management REST API to retrieve all scans that have been created extract the per-scan detail metadata.
 All data is retrieved through **read-only API operations** and written into structured CSV outputs for aging scan metrics
 
 The script implements a deterministic **three-pass workflow**:
 
-- **Pass 1**: export scan inventory, including authoritative scan names, to CSV
+- **Pass 1**: export scan inventory to CSV
 - **Pass 2**: retrieve per-scan detail metadata using `scan_id` and export to CSV
 - **Pass 3**: merge inventory CSV and detail CSV into a final merged dataset for aged scan analysis
 
@@ -27,7 +27,7 @@ This enables Vulnerability Management Operations resources, 3rd party auditors a
 - validate API connectivity before extraction
 - validate package dependencies availability before runtime
 - track records retrieved, processed, written, and failed for each pass
-- track scan names retrieved, processed, written, and failed for each pass
+- track number of scans retrieved, processed, written, and failed for each pass
 - log execution details to both console and logfile
 - monitor execution progress with `tqdm` progress bars for each pass
 - identify aged scans
@@ -73,7 +73,7 @@ All functionality is implemented independently using publicly available Tenable 
 | Feature | Description |
 |---------|-------------|
 | 📥 Scan Inventory Extraction | Retrieve scan inventory records from Tenable Vulnerability Management |
-| 🏷️ Scan Name Extraction | Extract authoritative scan names from the `name` field |
+| 🏷️ Scan Name Extraction | Extract scans from the `name` field |
 | 🔎 Scan Detail Retrieval | Retrieve detailed scan metadata using `scan_id` |
 | 🔗 CSV Merge Workflow | Merge inventory and detail exports into a final aged-scan analysis dataset |
 | 📄 Multi-CSV Output | Write inventory, detail, and merged records to CSV |
@@ -85,8 +85,8 @@ All functionality is implemented independently using publicly available Tenable 
 ### 📈 Analysis & Processing
 | Feature | Description |
 |---------|-------------|
-| 🧾 Inventory Preservation | Preserve authoritative scan inventory from Pass 1 |
-| 🏷️ Scan Name Continuity | Preserve scan-name continuity across all passes |
+| 🧾 Inventory Preservation | Preserve scan inventory from Pass 1 |
+| 🏷️ Scan Continuity | Preserve scan-name continuity across all passes |
 | 🔄 Pass Correlation | Use `scan_id` to correlate inventory and detail records |
 | 📚 Detail Enrichment | Enrich inventory records with per-scan detail metadata |
 | 📦 Final Merged Dataset | Produce merged CSV output for aged scan review and reporting |
@@ -107,7 +107,7 @@ All functionality is implemented independently using publicly available Tenable 
 
 | Pass | Description | Output |
 |------|-------------|--------|
-| **Pass 1** | Retrieve scan inventory and export authoritative scan names and inventory metadata | `tenable_vm_scans_inventory.csv` |
+| **Pass 1** | Retrieve scan inventory and export scans and inventory metadata | `tenable_vm_scans_inventory.csv` |
 | **Pass 2** | Use `scan_id` from Pass 1 to retrieve detailed scan metadata | `tenable_vm_scans_details.csv` |
 | **Pass 3** | Merge Pass 1 inventory and Pass 2 details into final output | `tenable_vm_scans_merged.csv` |
 
@@ -249,9 +249,9 @@ At the end of **each pass**, the script writes complete metrics to both:
 | Rule | Description |
 |------|-------------|
 | **Authoritative Field** | `name` |
-| **Pass 1** | Establishes the authoritative scan-name count |
-| **Pass 2** | Should preserve the Pass 1 scan-name count |
-| **Pass 3** | Should preserve the Pass 1 scan-name count |
+| **Pass 1** | Establishes scan count |
+| **Pass 2** | Should preserve the Pass 1 scan count |
+| **Pass 3** | Should preserve the Pass 1 scan count |
 
 ## Logging
 
@@ -350,7 +350,7 @@ Verify:
 - Tenable Vulnerability Management API availability
 
 ### Pass 2 scan-name counts do not match Pass 1
-The script design expects Pass 2 to preserve the authoritative `name` count from Pass 1.
+The script design expects Pass 2 to preserve the scan count from Pass 1.
 
 Inspect:
 
@@ -359,7 +359,7 @@ Inspect:
 - logfile messages for failed scan detail requests
 
 ### Pass 3 scan-name counts do not match Pass 1
-The script design expects Pass 3 to preserve the authoritative `name` count from Pass 1.
+The script design expects Pass 3 to preserve the scan count from Pass 1.
 
 Inspect:
 
